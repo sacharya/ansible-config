@@ -1,0 +1,30 @@
+---
+- name: install puppetmaster
+  hosts: puppetmaster 
+  gather_facts: true
+  user: root
+  roles:
+  - {role: install-puppetmaster}
+
+- name: install puppetagent on other nodes
+  hosts: puppetagents
+  gather_facts: true
+  user: root
+  vars:
+      puppetagent: '{{ ansible_fqdn }}'
+  roles:
+  - {role: install-puppetagent}
+
+- name: request cert signing
+  hosts: puppetagents
+  gather_facts: true
+  user: root
+    roles:
+  - {role: puppetagent}
+
+- name: sign all client certs
+  hosts: puppetmaster 
+  gather_facts: true
+  user: root
+  roles:
+  - {role: signcert}

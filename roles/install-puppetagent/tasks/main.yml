@@ -1,0 +1,15 @@
+---
+- name: Install base packages
+  apt: name={{item}} state=present update_cache=true
+  with_items:
+     - vim
+     - curl
+
+- name: Install Puppet
+  shell: 'curl https://raw.githubusercontent.com/openstack-infra/config/9e26d4863ea4104543ee75106e220944aedcf967/install_puppet.sh | bash' 
+
+- name: Add source repository into sources list
+  shell: "sed -i 's/START=no/START=yes/' /etc/default/puppet"
+  
+- name: Copy puppet.conf
+  template: src=puppet.conf dest=/etc/puppet/puppet.conf

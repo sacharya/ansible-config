@@ -1,0 +1,4 @@
+---
+domain: sacharya.com
+puppetmaster: puppet-master.{{domain}}
+

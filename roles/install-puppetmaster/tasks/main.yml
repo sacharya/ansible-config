@@ -1,0 +1,57 @@
+---
+- name: Install vim
+  apt: name=vim state=present update_cache=true
+
+- name: Install git
+  apt: name=git state=present update_cache=true
+
+- name: Download config repo
+  git: repo=git@github.com:sacharya/config
+       dest=/opt
+       accept_hostkey=yes
+
+- name: Install puppet
+  shell: /opt/config/production/install_puppet.sh >> /tmp/install_puppet.logs
+
+- name: Install hiera 
+  apt: name={{item}} state=present update_cache=true
+  with_items:
+     - puppetmaster-passenger
+     - hiera
+     - hiera-puppet
+
+- name: Install puppet modules
+  shell: /opt/config/production/install_modules.sh >> /tmp/install_modules.logs
+
+- name: Install puppetdb
+  shell: 'puppet apply --modulepath="/opt/config/production/modules:/etc/puppet/modules" -e "class {openstack_project::puppetdb: domain => ''"{{domain}}"''}" >> /tmp/install_puppetdb'
+
+- name: Install puppetmaster
+  shell: 'puppet apply --modulepath="/opt/config/production/modules:/etc/puppet/modules" -e "class {openstack_project::puppetmaster: domain => ''"{{domain}}"''}" >> /tmp/install_puppet_masterlogs'
+
+- name: Install puppetdb-terminus
+  apt: name=puppetdb-terminus=1.6.3-1puppetlabs1 state=present update_cache=true
+
+- name: Install puppetmaster
+  shell: 'puppet apply --modulepath="/opt/config/production/modules:/etc/puppet/modules" -e "class {openstack_project::puppetmaster: domain => ''"{{domain}}"''}" >> /tmp/install_puppet_masterlogs'
+
+- name: Install puppetdb-terminus
+  apt: name=puppetmaster state=present update_cache=true
+
+- name: Start puppetmaster  
+  service: name=puppetmaster state=started
+
+- name: Hiera Config
+  command: "{{item}}"
+  with_items:
+      - mkdir -p /etc/puppet/hieradata/production
+      - cp /opt/config/production/hiera/common.yaml /etc/puppet/hieradata/production
+      - chown -R puppet:puppet /etc/puppet/hieradata/
+      - chmod -R 0711 /etc/puppet/hieradata/
+      - chmod 0600 /etc/puppet/hieradata/production/common.yaml
+      - mkdir -p /etc/puppet/hieradata/production/generated
+      - cp /opt/config/production/scripts/create-config-yaml.sh /etc/puppet/hieradata/production/generated
+      - cd /etc/puppet/hieradata/production/generated
+      - bash create-config-yaml.sh
+      - cp /etc/puppet/hieradata/production/generated/common_generated.yaml /etc/puppet/hieradata/production/common.yaml
+      

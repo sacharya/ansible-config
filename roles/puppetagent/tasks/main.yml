@@ -1,0 +1,4 @@
+---
+- name: Run puppet agent
+  shell: 'puppet agent -t'
+

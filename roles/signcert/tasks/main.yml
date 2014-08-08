@@ -1,0 +1,4 @@
+---
+- name: Sign client certs
+  shell: 'puppet cert sign --all'
+
