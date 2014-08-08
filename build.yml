@@ -19,7 +19,7 @@
   hosts: puppetagents
   gather_facts: true
   user: root
-    roles:
+  roles:
   - {role: puppetagent}
 
 - name: sign all client certs
