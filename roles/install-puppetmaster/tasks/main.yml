@@ -24,7 +24,7 @@
   shell: /opt/config/production/install_modules.sh >> /tmp/install_modules.logs
 
 - name: Install puppetdb
-  shell: 'puppet apply --modulepath="/opt/config/production/modules:/etc/puppet/modules" -e "class {openstack_project::puppetdb: domain => ''"{{domain}}"''}" >> /tmp/install_puppetdb'
+  shell: 'puppet apply --modulepath="/opt/config/production/modules:/etc/puppet/modules" -e "include openstack_project::puppetdb" >> /tmp/install_puppetdb'
 
 - name: Install puppetmaster
   shell: 'puppet apply --modulepath="/opt/config/production/modules:/etc/puppet/modules" -e "class {openstack_project::puppetmaster: domain => ''"{{domain}}"''}" >> /tmp/install_puppet_masterlogs'
@@ -52,6 +52,6 @@
       - mkdir -p /etc/puppet/hieradata/production/generated
       - cp /opt/config/production/scripts/create-config-yaml.sh /etc/puppet/hieradata/production/generated
       - cd /etc/puppet/hieradata/production/generated
-      - bash create-config-yaml.sh
+      - sh create-config-yaml.sh
       - cp /etc/puppet/hieradata/production/generated/common_generated.yaml /etc/puppet/hieradata/production/common.yaml
       

@@ -11,7 +11,7 @@
   gather_facts: true
   user: root
   vars:
-      puppetagent: '{{ ansible_fqdn }}'
+      puppetagent: '{{ ansible_nodename }}'
   roles:
   - {role: install-puppetagent}
 
