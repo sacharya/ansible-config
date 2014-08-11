@@ -1,19 +1,21 @@
 Description
 ===
 
-Ansible playbook for deploying a cluster of Apache Cassandra nodes. Currently only supports version 2.0 and with very little configuration options.
-
-
-Deploy a Cassandra cluster
-===
+Using Ansible to orchestrate some of puppet installation configuration. 
 
 * Fill in the inventory file at inventory/hosts with a list of your hosts:
 ```bash
     cat inventory/hosts
-    [cassandra]
-    10.0.0.1
+    [puppetmaster]
     10.0.0.2
+
+    [puppetagents]
     10.0.0.3
+    10.0.0.4
+    10.0.0.5
+    10.0.0.6
+    10.0.0.7
+    10.0.0.8
 ```
 
 * Change any configuration options:
@@ -23,5 +25,11 @@ Deploy a Cassandra cluster
 
 * Execute the playbook:
 ```bash
-    ./build.sh
+    ./master.sh --user root --ask-pass -vvvv
+```
+
+Update your configuration file under /etc/puppet/hieradata/production.
+
+```bash
+    ./build.sh --user root --ask-pass -vvvv
 ```
