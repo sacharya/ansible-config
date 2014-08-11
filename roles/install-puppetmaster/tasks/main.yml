@@ -42,16 +42,14 @@
   service: name=puppetmaster state=started
 
 - name: Hiera Config
-  command: "{{item}}"
+  shell: "{{item}}"
   with_items:
       - mkdir -p /etc/puppet/hieradata/production
       - cp /opt/config/production/hiera/common.yaml /etc/puppet/hieradata/production
       - chown -R puppet:puppet /etc/puppet/hieradata/
       - chmod -R 0711 /etc/puppet/hieradata/
       - chmod 0600 /etc/puppet/hieradata/production/common.yaml
-      - mkdir -p /etc/puppet/hieradata/production/generated
-      - cp /opt/config/production/scripts/create-config-yaml.sh /etc/puppet/hieradata/production/generated
-      - cd /etc/puppet/hieradata/production/generated
-      - sh create-config-yaml.sh
-      - cp /etc/puppet/hieradata/production/generated/common_generated.yaml /etc/puppet/hieradata/production/common.yaml
-      
+      - mkdir -p /etc/puppet/hieradata/production/sample
+      - cp /opt/config/production/scripts/generate-sample-config.sh /etc/puppet/hieradata/production/sample
+      #- generate-sample-config.sh >> /tmp/createconfig.log chdir=/etc/puppet/hieradata/production/sample/
+      #- cp /etc/puppet/hieradata/production/sample/common_sample.yaml /etc/puppet/hieradata/production/common.yaml      
