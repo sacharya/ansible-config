@@ -1,0 +1,6 @@
+- name: run puppet agent
+  hosts: puppetagents
+  gather_facts: true
+  user: root
+  roles:
+  - {role: puppetagent}

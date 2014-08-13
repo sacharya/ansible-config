@@ -1,13 +1,4 @@
 ---
-- name: install puppetagent on other nodes
-  hosts: puppetagents
-  gather_facts: true
-  user: root
-  vars:
-      puppetagent: '{{ ansible_nodename }}'
-  roles:
-  - {role: install-puppetagent}
-
 - name: request cert signing
   hosts: puppetagents
   gather_facts: true
